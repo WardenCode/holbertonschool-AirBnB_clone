@@ -1,22 +1,25 @@
 #!/usr/bin/python3
 """This model defines several tests cases for the BaseModel class"""
-from distutils.ccompiler import new_compiler
 import unittest
-from models.base_model import BaseModel
+from models.base_model import BaseModel, storage
 from datetime import datetime
+
+from models.engine.file_storage import FileStorage
 
 
 class Test_Base_Model(unittest.TestCase):
     """
-        Tests for BaseModel class
+    Tests for BaseModel class
     """
+
+    # Test of Base Model
 
     def test_created_at(self):
         """Tests 'created_at' time"""
         new_model = BaseModel()
         now = datetime.now().microsecond
         then = new_model.created_at.microsecond
-        self.assertLess(now - then, 10)
+        self.assertLess(now - then, 50)
 
     def test_update(self):
         """Tests 'update_at' time"""
@@ -72,3 +75,12 @@ class Test_Base_Model(unittest.TestCase):
     #     to_dict = new_model.to_dict()
     #     new_model_2 = BaseModel(to_dict)
     #     self.assertEqual(new_model.to_dict(), new_model_2.to_dict())
+
+    # Test of FileStorage
+
+    def test_function_all(self):
+        """Test functions 'all, new, save & reload'"""
+        new_model = BaseModel()
+        obj_name = new_model.__class__.__name__
+        id = new_model.id
+        self.assertNotEqual(None, storage.all().get(f"{obj_name}.{id}", None))

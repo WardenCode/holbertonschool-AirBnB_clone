@@ -9,7 +9,7 @@ from models import storage
 
 class BaseModel():
     """
-        Class BaseModel to State, City, etc
+    Class BaseModel to State, City, etc
     """
 
     def __init__(self, *args, **kwargs):
@@ -27,7 +27,6 @@ class BaseModel():
             kwargs["created_at"] = datetime.fromisoformat(kwargs["created_at"])
             kwargs["update_at"] = datetime.fromisoformat(kwargs["update_at"])
             self.__dict__.update(**kwargs)
-
 
     def __str__(self):
         """
