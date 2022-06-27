@@ -11,19 +11,27 @@ class BaseModel():
         Class BaseModel to State, City, etc
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         Constructor of Base Model
         """
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.update_at = datetime.now()
+        if not(kwargs):
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.update_at = self.created_at
+        else:
+            #Consider user crafted JSONs
+            del kwargs["__class__"]
+            kwargs["created_at"] = datetime.fromisoformat(kwargs["created_at"])
+            kwargs["update_at"] = datetime.fromisoformat(kwargs["update_at"])
+            self.__dict__.update(**kwargs)
+
 
     def __str__(self):
         """
         Unofficial representation of Base Model
         """
-        return (f"[{self.__class__.__name__}] ({self.id}) <{self.__dict__}>")
+        return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
 
     def save(self):
         """
