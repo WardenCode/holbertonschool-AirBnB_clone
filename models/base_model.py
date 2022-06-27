@@ -40,6 +40,7 @@ class BaseModel():
         Save the new changes with the actual time
         """
         self.update_at = datetime.now()
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
