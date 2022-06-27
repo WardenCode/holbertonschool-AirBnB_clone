@@ -4,6 +4,7 @@
 """
 from uuid import uuid4
 from datetime import datetime
+from models import storage
 
 
 class BaseModel():
@@ -19,6 +20,7 @@ class BaseModel():
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.update_at = self.created_at
+            storage.new(self)
         else:
             # Consider user crafted JSONs
             del kwargs["__class__"]
@@ -38,6 +40,7 @@ class BaseModel():
         Save the new changes with the actual time
         """
         self.update_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """
