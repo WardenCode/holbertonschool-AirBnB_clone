@@ -33,4 +33,3 @@ class FileStorage():
 			with open(path, 'r', encoding="utf-8") as file:
 				objects = json.loads(file.read())
 				FileStorage.__objects.update(**objects)
-		
