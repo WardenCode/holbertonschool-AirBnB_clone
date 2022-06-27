@@ -3,7 +3,7 @@
 from distutils.ccompiler import new_compiler
 import unittest
 from models.base_model import BaseModel
-from datetime import datetime, date
+from datetime import datetime
 
 
 class Test_Base_Model(unittest.TestCase):
@@ -53,3 +53,22 @@ class Test_Base_Model(unittest.TestCase):
         except ValueError as e:
             raised = True
         self.assertFalse(raised)
+
+    def test_init_kwargs(self):
+        """Tests '__init__' method with kwargs"""
+        new_model = BaseModel()
+        my_model_json = new_model.to_dict()
+        new_model2 = BaseModel(**my_model_json)
+        self.assertEqual(new_model.to_dict(), new_model2.to_dict())
+
+    def test_init_args(self):
+        """Tests '__init__' method trying args"""
+        new_model = BaseModel(5, "05/12/99", "05/12/99")
+        self.assertNotEqual(new_model, None)
+
+    # def test_init_bad_kwargs(self):
+    #     """Tests '__init__' method with a bad id"""
+    #     new_model = BaseModel(id=51)
+    #     to_dict = new_model.to_dict()
+    #     new_model_2 = BaseModel(to_dict)
+    #     self.assertEqual(new_model.to_dict(), new_model_2.to_dict())

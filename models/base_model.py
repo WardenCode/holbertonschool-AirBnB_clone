@@ -15,12 +15,12 @@ class BaseModel():
         """
         Constructor of Base Model
         """
-        if not(kwargs):
+        if not (kwargs):
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.update_at = self.created_at
         else:
-            #Consider user crafted JSONs
+            # Consider user crafted JSONs
             del kwargs["__class__"]
             kwargs["created_at"] = datetime.fromisoformat(kwargs["created_at"])
             kwargs["update_at"] = datetime.fromisoformat(kwargs["update_at"])
@@ -43,7 +43,7 @@ class BaseModel():
         """
         Representation in a dictionary of the instance
         """
-        model = self.__dict__
+        model = dict(self.__dict__)
 
         model["__class__"] = self.__class__.__name__
         model["created_at"] = model["created_at"].isoformat()
