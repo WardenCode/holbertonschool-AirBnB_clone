@@ -2,7 +2,9 @@
 """"In this module the class HBNBCommand is defined"""
 
 import cmd
-from models import BaseModel, storage, classes
+from models import storage, classes
+from re import search
+import json
 
 
 class HBNBCommand(cmd.Cmd):
@@ -43,9 +45,9 @@ class HBNBCommand(cmd.Cmd):
                 print("** attribute name missing **")
                 return (1)
 
-            if (len_params == 3):
-                print("** value missing **")
-                return (1)
+        #     if (len_params == 3):
+        #         print("** value missing **")
+        #         return (1)
 
         return (0)
 
@@ -110,26 +112,62 @@ all: Display all instances or specific one"""
     def do_update(self, arg):
         """Usage: update <class name> <id> <attr name> <attr value>
 update: changes or adds an attribute to an instance"""
+        reg = search("(\{.*\})", arg)
+        
         params = arg.split()
 
-        if not (HBNBCommand.validate_params(params, 1)):
-            key = params[2]
-            value = params[3]
-
-            if (key in ["id", "created_at", "updated_at"]):
-                print("Forbbiden")
-                return
-
-            if (value.isdigit()):
-                value = int(value)
+        if not (HBNBCommand.validate_params(params, 2)):
+            if (reg):
+                dct = json.loads(reg.group(1))
             else:
-                try:
-                    value = float(value)
-                except ValueError:
-                    pass
-
-            storage.all()[f"{params[0]}.{params[1]}"].__setattr__(key, value)
+                if (len(params) == 3):
+                    print("** value missing **")
+                    return
+                dct = {f"{params[2]}": params[3]}
+            for i in dct.keys():
+                if (i in ["id", "created_at", "updated_at"]):
+                    print("Forbbiden")
+                    return
+                if (type(dct[i]) is str):
+                    if (dct[i].isdigit()):
+                        dct[i] = int(dct[i])
+                    else:
+                        try:
+                            dct[i] = float(dct[i])
+                        except ValueError:
+                            pass
+            storage.all()[f"{params[0]}.{params[1]}"].__dict__.update(**dct)
             storage.save()
+    
+    def precmd(self, line):
+        regex = search("^(\w+)\.(\w+)\((.*)\)$", line)
+        if (regex):
+            cmds = ["all", "count", "destroy", "show", "update"]
+            class_name = regex.group(1)
+            cmdd = regex.group(2)
+            args = regex.group(3)
+            if (cmdd in cmds):
+                if (cmdd == "all"):
+                    query = f"{cmdd} {args}"
+                if (cmdd == "update"):
+                    dct = search("(\{.*\})", args)
+                    arg_1 = args.split(',')
+                    if (dct):
+                        query = f"{cmdd} {class_name} {arg_1[0]} {dct.group(1)}"
+                    else:
+                        query = f"{cmdd} {class_name} {''.join(arg_1)}"
+                elif (cmdd == "count"):
+                    # ??
+                    if (class_name not in HBNBCommand.valid_classes):
+                        return line
+                    storage_keys = storage.all().keys()
+                    print(len([i for i in storage_keys if i.split('.')[0] == class_name]))
+                    return "\n"
+                else:
+                    query = f"{cmdd} {class_name} {args}"
+                return query
+
+        return line
 
 
 if __name__ == '__main__':
