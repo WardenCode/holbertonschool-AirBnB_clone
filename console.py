@@ -2,12 +2,13 @@
 """"In this module the class HBNBCommand is defined"""
 
 import cmd
-from models.base_model import BaseModel, storage
+from models import BaseModel, storage, classes
 
 
 class HBNBCommand(cmd.Cmd):
     """Class to make a python shell"""
     prompt = "(hbnb) "
+    valid_classes = ["BaseModel", "User", "Amenity", "Place", "City", "State", "Review"]
 
     @staticmethod
     def validate_params(params, case):
@@ -17,7 +18,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class name missing **")
                 return (1)
 
-            if (params[0] not in ["BaseModel"]):
+            if (params[0] not in HBNBCommand.valid_classes):
                 print("** class doesn't exist **")
                 return (1)
 
@@ -27,7 +28,6 @@ class HBNBCommand(cmd.Cmd):
             if (len_params == 1):
                 print("** instance id missing **")
                 return (1)
-
             if not (storage.all().get(f"{params[0]}.{params[1]}", None)):
                 print("** no instance found **")
                 return (1)
@@ -57,7 +57,7 @@ class HBNBCommand(cmd.Cmd):
         params = arg.split()
 
         if not (HBNBCommand.validate_params(params, 0)):
-            new_model = BaseModel()
+            new_model = classes[params[0]]()
             new_model.save()
             print(new_model.id)
 
@@ -67,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
         params = arg.split()
 
         if not (HBNBCommand.validate_params(params, 1)):
-            print(storage.all().get(f"BaseModel.{params[1]}"))
+            print(storage.all().get(f"{params[0]}.{params[1]}"))
 
 
     def do_destroy(self, arg):
@@ -88,10 +88,11 @@ class HBNBCommand(cmd.Cmd):
             print(storage.all())
             return
 
-        if (params[0] not in ["BaseModel"]):
+        if (params[0] not in HBNBCommand.valid_classes):
             print("** class doesn't exist **")
         else:
-            print(storage.all()) # add filter
+            l = list(filter(lambda x: x.__class__.__name__ == params[0], storage.all().values()))
+            print([str(i) for i in l]) # add filter
 
     def do_update(self, arg):
         """Usage: update <class name> <id> <attribute name> "<attribute value>"""
@@ -113,7 +114,7 @@ class HBNBCommand(cmd.Cmd):
                 except ValueError:
                     pass
 
-            storage.all()[f"{params[0]}.{params[1]}"][key] = value
+            storage.all()[f"{params[0]}.{params[1]}"].__setattr__(key, value)
             storage.save()
 
 

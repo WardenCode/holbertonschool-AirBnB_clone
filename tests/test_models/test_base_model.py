@@ -4,9 +4,6 @@ import unittest
 from models.base_model import BaseModel, storage
 from datetime import datetime
 
-from models.engine.file_storage import FileStorage
-
-
 class Test_Base_Model(unittest.TestCase):
     """
     Tests for BaseModel class
