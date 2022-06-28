@@ -113,7 +113,7 @@ all: Display all instances or specific one"""
         """Usage: update <class name> <id> <attr name> <attr value>
 update: changes or adds an attribute to an instance"""
         reg = search("(\{.*\})", arg)
-        
+
         params = arg.split()
 
         if not (HBNBCommand.validate_params(params, 2)):
@@ -138,12 +138,12 @@ update: changes or adds an attribute to an instance"""
                             pass
             storage.all()[f"{params[0]}.{params[1]}"].__dict__.update(**dct)
             storage.save()
-    
+
     def precmd(self, line):
         regex = search("^(\w+)\.(\w+)\((.*)\)$", line)
         if (regex):
             cmds = ["all", "count", "destroy", "show", "update"]
-            class_name = regex.group(1)
+            cls_name = regex.group(1)
             cmdd = regex.group(2)
             args = regex.group(3)
             if (cmdd in cmds):
@@ -153,18 +153,20 @@ update: changes or adds an attribute to an instance"""
                     dct = search("(\{.*\})", args)
                     arg_1 = args.split(',')
                     if (dct):
-                        query = f"{cmdd} {class_name} {arg_1[0]} {dct.group(1)}"
+                        query = f"{cmdd} {cls_name} {arg_1[0]} {dct.group(1)}"
                     else:
-                        query = f"{cmdd} {class_name} {''.join(arg_1)}"
+                        query = f"{cmdd} {cls_name} {''.join(arg_1)}"
                 elif (cmdd == "count"):
                     # ??
-                    if (class_name not in HBNBCommand.valid_classes):
+                    if (cls_name not in HBNBCommand.valid_classes):
                         return line
-                    storage_keys = storage.all().keys()
-                    print(len([i for i in storage_keys if i.split('.')[0] == class_name]))
+                    keys = storage.all().keys()
+                    print(len(
+                        [i for i in keys if i.split('.')[0] == cls_name]
+                        ))
                     return "\n"
                 else:
-                    query = f"{cmdd} {class_name} {args}"
+                    query = f"{cmdd} {cls_name} {args}"
                 return query
 
         return line
