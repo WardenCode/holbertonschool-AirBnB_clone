@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-
+Class BaseModel for AirBnB clone, this class will be used by any other class
 """
 from uuid import uuid4
 from datetime import datetime

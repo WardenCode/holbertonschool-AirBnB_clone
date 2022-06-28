@@ -5,15 +5,12 @@ Manage the File Storage for the class Base Model
 import json
 from os.path import exists
 import models
-#from models.base_model import BaseModel
-# from models.base_model import BaseModel
 
 
 class FileStorage():
     """
     Class FileStorage for manage the instance created by BaseModel
     """
-
     __file_path = "file.json"
     __objects = {}
 
@@ -23,7 +20,7 @@ class FileStorage():
 
     def new(self, obj):
         """
-        Adds a new instances in the obj FileStorage.__objects (to convert into JSON)
+        Adds a new instance in the obj __objects (to convert into JSON)
         Args:
             - obj: Instance of Base Model
         """
@@ -34,7 +31,7 @@ class FileStorage():
         """Writes the obj FileStorage.__objects into a JSON file"""
         save_dict = {k: v.to_dict() for k, v in FileStorage.__objects.items()}
         with open(FileStorage.__file_path, 'w+', encoding='utf-8') as file:
-            file.write(json.dumps(save_dict))
+            file.write(json.dumps(save_dict, indent=4, sort_keys=True))
 
     def reload(self):
         """Loads the data of a JSON file into the program"""
@@ -44,6 +41,7 @@ class FileStorage():
                 text = file.read()
                 if (len(text)):
                     objects = json.loads(text)
-                    save_dict = {k: models.classes[v['__class__']](**v) for k, v in objects.items()}
-                    FileStorage.__objects.update(**save_dict)
-                    
+                    items = objects.items()
+                    classes = models.classes
+                    load = {k: classes[v['__class__']](**v) for k, v in items}
+                    FileStorage.__objects.update(**load)

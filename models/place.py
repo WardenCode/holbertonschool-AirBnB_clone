@@ -1,6 +1,14 @@
+#!/usr/bin/python3
+"""
+Class Place for AirBnB clone
+"""
 from models.base_model import BaseModel
 
+
 class Place(BaseModel):
+    """
+    Class Place that inherits from BaseModel
+    """
     city_id: str = ""
     user_id: str = ""
     name: str = ""
