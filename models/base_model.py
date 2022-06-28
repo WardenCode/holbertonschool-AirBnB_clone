@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """
-
+Class BaseModel for AirBnB clone, this class will be used by any other class
 """
 from uuid import uuid4
 from datetime import datetime
-from models import storage
+import models
 
 
 class BaseModel():
@@ -20,7 +20,7 @@ class BaseModel():
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.update_at = self.created_at
-            storage.new(self)
+            models.storage.new(self)
         else:
             # Consider user crafted JSONs
             del kwargs["__class__"]
@@ -39,8 +39,8 @@ class BaseModel():
         Save the new changes with the actual time
         """
         self.update_at = datetime.now()
-        storage.new(self)
-        storage.save()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
         """
