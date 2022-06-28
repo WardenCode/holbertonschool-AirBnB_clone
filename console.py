@@ -140,6 +140,7 @@ update: changes or adds an attribute to an instance"""
             storage.save()
 
     def precmd(self, line):
+        """Validate 'class methods' passed by the console"""
         regex = search("^(\w+)\.(\w+)\((.*)\)$", line)
         if (regex):
             cmds = ["all", "count", "destroy", "show", "update"]
@@ -168,9 +169,7 @@ update: changes or adds an attribute to an instance"""
                 else:
                     query = f"{cmdd} {cls_name} {args}"
                 return query
-
         return line
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
