@@ -8,11 +8,17 @@ from models import BaseModel, storage, classes
 class HBNBCommand(cmd.Cmd):
     """Class to make a python shell"""
     prompt = "(hbnb) "
-    valid_classes = ["BaseModel", "User", "Amenity", "Place", "City", "State", "Review"]
+    valid_classes = ["BaseModel", "User", "Amenity", "Place",
+                     "City", "State", "Review"]
 
     @staticmethod
     def validate_params(params, case):
-        """"""
+        """
+        Validate the params passed for the customize methods (CRUD)
+        Args:
+            - params : str[]
+            - case : int
+        """
         if (case >= 0):
             if not (params):
                 print("** class name missing **")
@@ -43,6 +49,10 @@ class HBNBCommand(cmd.Cmd):
 
         return (0)
 
+    def emptyline(self):
+        """Overwrites the standard behavior when nothing is entered"""
+        pass
+
     def do_quit(self, arg):
         """Usage: quit,\nquits the shell"""
         exit()
@@ -53,7 +63,8 @@ class HBNBCommand(cmd.Cmd):
         exit()
 
     def do_create(self, arg):
-        """"""
+        """Usage: create <class_name>
+create: Create a new instance of a class"""
         params = arg.split()
 
         if not (HBNBCommand.validate_params(params, 0)):
@@ -61,17 +72,17 @@ class HBNBCommand(cmd.Cmd):
             new_model.save()
             print(new_model.id)
 
-
     def do_show(self, arg):
-        """"""
+        """Usage: show <class_name> <id>
+show: Show an instance with the id"""
         params = arg.split()
 
         if not (HBNBCommand.validate_params(params, 1)):
             print(storage.all().get(f"{params[0]}.{params[1]}"))
 
-
     def do_destroy(self, arg):
-        """"""
+        """Usage: destroy <class_name> <id>
+destroy: Destroy an instance with the id"""
         params = arg.split()
 
         if not (HBNBCommand.validate_params(params, 1)):
@@ -79,23 +90,26 @@ class HBNBCommand(cmd.Cmd):
             del element[f"{params[0]}.{params[1]}"]
             storage.save()
 
-
     def do_all(self, arg):
-        """"""
+        """Usage: all <BaseModel> | all
+all: Display all instances or specific one"""
         params = arg.split()
+        values = storage.all().values()
 
         if not (params):
-            print(storage.all())
+            print([str(value) for value in values])
             return
 
         if (params[0] not in HBNBCommand.valid_classes):
             print("** class doesn't exist **")
         else:
-            l = list(filter(lambda x: x.__class__.__name__ == params[0], storage.all().values()))
-            print([str(i) for i in l]) # add filter
+            name = params[0]
+            filt = filter(lambda x: x.__class__.__name__ == name, values)
+            print([str(i) for i in list(filt)])
 
     def do_update(self, arg):
-        """Usage: update <class name> <id> <attribute name> "<attribute value>"""
+        """Usage: update <class name> <id> <attr name> <attr value>
+update: changes or adds an attribute to an instance"""
         params = arg.split()
 
         if not (HBNBCommand.validate_params(params, 1)):
