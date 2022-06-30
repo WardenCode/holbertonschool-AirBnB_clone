@@ -1,13 +1,28 @@
 #!/usr/bin/python3
 """This model defines several tests cases for the BaseModel class"""
 import unittest
-from models.base_model import BaseModel, storage
+import pycodestyle
+from models import BaseModel, storage
 from datetime import datetime
+
 
 class Test_Base_Model(unittest.TestCase):
     """
     Tests for BaseModel class
     """
+
+    # Test for Documentation
+
+    def test_pep8_base(self):
+        """
+        Test that checks PEP8 | Pycodestyle
+        """
+        syntax = pycodestyle.StyleGuide(quit=True)
+        check = syntax.check_files(['models/base_model.py'])
+        self.assertEqual(
+            check.total_errors, 0,
+            "Found code style error (and warnings)"
+        )
 
     # Test of Base Model
 

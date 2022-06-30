@@ -112,7 +112,7 @@ all: Display all instances or specific one"""
     def do_update(self, arg):
         """Usage: update <class name> <id> <attr name> <attr value>
 update: changes or adds an attribute to an instance"""
-        reg = search("(\{.*\})", arg)
+        reg = search(r"(\{.*\})", arg)
 
         params = arg.split()
 
@@ -141,7 +141,7 @@ update: changes or adds an attribute to an instance"""
 
     def precmd(self, line):
         """Validate 'class methods' passed by the console"""
-        regex = search("^(\w+)\.(\w+)\((.*)\)$", line)
+        regex = search(r"^(\w+)\.(\w+)\((.*)\)$", line)
         if (regex):
             cmds = ["all", "count", "destroy", "show", "update"]
             cls_name = regex.group(1)
@@ -151,7 +151,7 @@ update: changes or adds an attribute to an instance"""
                 if (cmdd == "all"):
                     query = f"{cmdd} {args}"
                 if (cmdd == "update"):
-                    dct = search("(\{.*\})", args)
+                    dct = search(r"(\{.*\})", args)
                     arg_1 = args.split(',')
                     if (dct):
                         query = f"{cmdd} {cls_name} {arg_1[0]} {dct.group(1)}"
@@ -170,6 +170,7 @@ update: changes or adds an attribute to an instance"""
                     query = f"{cmdd} {cls_name} {args}"
                 return query
         return line
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
