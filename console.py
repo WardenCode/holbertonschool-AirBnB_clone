@@ -171,6 +171,8 @@ update: changes or adds an attribute to an instance"""
                 return query
         return line
 
+    
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()

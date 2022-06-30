@@ -25,7 +25,6 @@ class Test_Base_Model(unittest.TestCase):
         )
 
     # Test of Base Model
-
     def test_created_at(self):
         """Tests 'created_at' time"""
         new_model = BaseModel()
