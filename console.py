@@ -136,8 +136,9 @@ update: changes or adds an attribute to an instance"""
                             dct[i] = float(dct[i])
                         except ValueError:
                             pass
-            storage.all()[f"{params[0]}.{params[1]}"].__dict__.update(**dct)
-            storage.save()
+            class_storage = storage.all()[f"{params[0]}.{params[1]}"]
+            class_storage.__dict__.update(**dct)
+            class_storage.save()
 
     def precmd(self, line):
         """Validate 'class methods' passed by the console"""
