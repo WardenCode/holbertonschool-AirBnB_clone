@@ -118,7 +118,12 @@ update: changes or adds an attribute to an instance"""
 
         if not (HBNBCommand.validate_params(params, 2)):
             if (reg):
-                dct = json.loads(reg.group(1))
+                try:
+                    dct = json.loads(reg.group(1))
+                except Exception as e:
+                    if "value" in str(e):
+                        print("** value missing **")
+                    return
             else:
                 if (len(params) == 3):
                     print("** value missing **")
