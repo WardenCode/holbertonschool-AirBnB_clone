@@ -19,13 +19,13 @@ class BaseModel():
         if not (kwargs):
             self.id = str(uuid4())
             self.created_at = datetime.now()
-            self.update_at = self.created_at
+            self.updated_at = self.created_at
             models.storage.new(self)
         else:
             # Consider user crafted JSONs
             del kwargs["__class__"]
             kwargs["created_at"] = datetime.fromisoformat(kwargs["created_at"])
-            kwargs["update_at"] = datetime.fromisoformat(kwargs["update_at"])
+            kwargs["updated_at"] = datetime.fromisoformat(kwargs["updated_at"])
             self.__dict__.update(**kwargs)
 
     def __str__(self):
@@ -38,7 +38,7 @@ class BaseModel():
         """
         Save the new changes with the actual time
         """
-        self.update_at = datetime.now()
+        self.updated_at = datetime.now()
         models.storage.new(self)
         models.storage.save()
 
@@ -50,6 +50,5 @@ class BaseModel():
 
         model["__class__"] = self.__class__.__name__
         model["created_at"] = model["created_at"].isoformat()
-        model["update_at"] = model["update_at"].isoformat()
-
+        model["updated_at"] = model["updated_at"].isoformat()
         return (model)
