@@ -123,6 +123,8 @@ update: changes or adds an attribute to an instance"""
                 except Exception as e:
                     if "value" in str(e):
                         print("** value missing **")
+                    elif "name" in str(e):
+                        print("** attribute name missing **")
                     return
             else:
                 if (len(params) == 3):
