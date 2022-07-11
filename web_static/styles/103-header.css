@@ -1,0 +1,32 @@
+header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 70px;
+	width: 100%;
+	background-color: #FFF;
+	border-bottom: solid 1px #CCC;
+}
+
+.logo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 142px;
+	height: 100%;
+}
+
+.logo img {
+	max-width: 100%;
+	height: auto;
+}
+
+@media (min-width: 768px) {
+	header {
+		justify-content: flex-start;
+	}
+
+	.logo {
+		margin-left: 30px;
+	}
+}
